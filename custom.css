@@ -15,6 +15,13 @@ body  {
    max-width: 35em;
 }
 
+/* Note that no math currently gets imported into
+   Word or LibreOffice - I recommend going with LaTeX
+   if you need to have formulas */
+.MathJax span {
+font-size: 13pt;
+}
+
 /* Set the paragraph margin and 
    padding to 0 except for the bottom */
 p {

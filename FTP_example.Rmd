@@ -85,26 +85,7 @@ pvalues <-
   1 - pchisq(coef(fit)^2/diag(vcov(fit)), df=1)
 ```
 
-```{r}
-pvalue_formatter <- function(pvalues, sig.limit = 0.001){
-  sapply(pvalues, function(x, sig.limit){
-    if (x < sig.limit)
-      return(sprintf("&lt; %s", format(sig.limit))) 
-    # &lt; stands for < and is needed
-    # for the markdown/html to work
-    # and the format is needed to avoid trailing zeros
-    
-    # High p-values you usually want two decimals
-    # otherwise report only one
-    if (x > 0.01)
-      return(format(x, digits=2))
-    
-    return(format(x, digits=1))
-    }, sig.limit=sig.limit)
-}
-```
-
-After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalue_formatter(pvalues["ulcer=Present"])` and `r pvalue_formatter(pvalues["thickness"])`), see table `r as.numeric(options("table_counter"))-1` and figure `r getNextFigureNo()`.
+After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and figure `r getNextFigureNo()`.
 
 ```{r Regression_forestplot, fig.height=3, fig.width=5, fig.cap="A foresplot comparing the regression coefficients."}
 # I've adjusted the coefficient for age to be by 
