@@ -92,7 +92,7 @@ pvalues <-
 
 After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and figure `r getNextFigureNo()`.
 
-```{r Regression_forestplot, fig.height=3, fig.width=5, fig.cap="A foresplot comparing the regression coefficients."}
+```{r Regression_forestplot, fig.height=3, fig.width=5, fig.cap="A forest plot comparing the regression coefficients."}
 # I've adjusted the coefficient for age to be by 
 forestplotRegrObj(update(fit, .~.-age+I(age/10)), 
                   order.regexps=c("Female", "age", "ulc", "thi"),
