@@ -65,6 +65,11 @@ Main results
 ------------
 
 ```{r C_and_A, results='asis'}
+label(melanoma$sex) <- "Sex"
+label(melanoma$age) <- "Age"
+label(melanoma$ulcer) <- "Ulceration"
+label(melanoma$thickness) <- "Breslow thickness"
+
 # Setup needed for the rms coxph wrapper
 ddist <- datadist(melanoma)
 options(datadist = "ddist")
