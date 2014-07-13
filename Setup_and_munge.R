@@ -3,49 +3,48 @@
 ##################
 
 # Don't set knitr options outside knitr
-if ("package:knitr" %in% search()){
-  # Set some basic options. You usually do not
-  # want your code, messages, warnings etc
-  # to show in your actual manuscript
-  opts_chunk$set(warning=FALSE, 
-                 message=FALSE, 
-                 echo=FALSE, 
-                 dpi=96,
-                 fig.width=4, fig.height=4, # Default figure widths
-                 dev="png", dev.args=list(type="cairo"), # The png device
-                 # Change to dev="postscript" if you want the EPS-files
-                 # for submitting. Also remove the dev.args() as the postscript
-                 # doesn't accept the type="cairo" argument.
-                 error=FALSE)
-  
+if (length(ls(pattern = "metadata")) == 1 ||
+      (is.function(options()$device) &&
+         length(ls(envir = environment(options()$device), pattern="^knit$")) == 1)){
+  knitr::opts_chunk$set(warning=FALSE,
+                        message=FALSE,
+                        echo=FALSE,
+                        dpi=96,
+                        fig.width=4, fig.height=4, # Default figure widths
+                        dev="png", dev.args=list(type="cairo"), # The png device
+                        # Change to dev="postscript" if you want the EPS-files
+                        # for submitting. Also remove the dev.args() as the postscript
+                        # doesn't accept the type="cairo" argument.
+                        error=FALSE)
+
   # Evaluate the figure caption after the plot
-  opts_knit$set(eval.after='fig.cap')
-  
-  # Avoid including base64_images - this only 
+  knitr::opts_knit$set(eval.after='fig.cap')
+
+  # Avoid including base64_images - this only
   # works with the .RProfile setup
   options(base64_images = "none")
-  
+
   # Add a figure counter function
-  knit_hooks$set(plot = function(x, options) {
-    fig_fn = paste0(opts_knit$get("base.url"), 
+  knitr::knit_hooks$set(plot = function(x, options) {
+    fig_fn = paste0(knitr::opts_knit$get("base.url"),
                     paste(x, collapse = "."))
-    
+
     # Some stuff from the default definition
     fig.cap <- knitr:::.img.cap(options)
-    
+
     # Style and additional options that should be included in the img tag
     style=c("display: block",
             sprintf("margin: %s;",
-                    switch(options$fig.align, 
-                           left = 'auto auto auto 0', 
+                    switch(options$fig.align,
+                           left = 'auto auto auto 0',
                            center = 'auto',
                            right = 'auto 0 auto auto')))
-    # Certain arguments may not belong in style, 
+    # Certain arguments may not belong in style,
     # for instance the width and height are usually
     # outside if the do not have a unit specified
     addon_args = ""
-    
-    # This is perhaps a little overly complicated prepared 
+
+    # This is perhaps a little overly complicated prepared
     # with the loop but it allows for a more out.parameters if necessary
     if (any(grepl("^out.(height|width)", names(options)))){
       on <- names(options)[grep("^out.(height|width)", names(options))]
@@ -57,36 +56,37 @@ if ("package:knitr" %in% search()){
           addon_args = paste0(addon_args, dimName, "='", options[[out_name]], "'")
       }
     }
-    
+
     # Add counter if wanted
     fig_number_txt <- ""
     cntr <- getOption("figure_counter", FALSE)
     if (cntr != FALSE){
       if (is.logical(cntr))
         cntr <- 1
-      # The figure_counter_str allows for custom 
+      # The figure_counter_str allows for custom
       # figure text, you may for instance want it in
       # bold: <b>Figure %s:</b>
       # The %s is so that you have the option of setting the
       # counter manually to 1a, 1b, etc if needed
-      fig_number_txt <- 
-        sprintf(getOption("figure_counter_str", "Figure %s: "), 
-                ifelse(getOption("figure_counter_roman", FALSE), 
+      fig_number_txt <-
+        sprintf(getOption("figure_counter_str", "Figure %s: "),
+                ifelse(getOption("figure_counter_roman", FALSE),
                        as.character(as.roman(cntr)), as.character(cntr)))
-      
+
       if (is.numeric(cntr))
         options(figure_counter = cntr + 1)
     }
-    
+
     # Put it all together
-    paste0("<figure><img src='", fig_fn, "'", 
+    paste0("<figure><img src='", fig_fn, "'",
            " ", addon_args,
            paste0(" style='", paste(style, collapse="; "), "'"),
            ">",
            "<figcaption>", fig_number_txt, fig.cap, "</figcaption></figure>")
   })
-  
+
 }
+
 
 # Use the table counter that the htmlTable() provides
 options(table_counter = TRUE)
@@ -119,23 +119,23 @@ library(Greg) # You need to get this from my GitHub see http://gforge.se/Gmisc
 data("melanoma")
 
 # Set time to years instead of days
-melanoma$time_years <- 
+melanoma$time_years <-
   melanoma$time / 365.25
 
-# Factor the basic variables that 
+# Factor the basic variables that
 # we're interested in
-melanoma$status <- 
-  factor(melanoma$status, 
+melanoma$status <-
+  factor(melanoma$status,
          levels=c(2, 1, 3),
          labels=c("Alive", # Reference
-                  "Melanoma death", 
+                  "Melanoma death",
                   "Non-melanoma death"))
-melanoma$sex <- 
+melanoma$sex <-
   factor(melanoma$sex,
          labels=c("Male", # Reference
                   "Female"))
 
-melanoma$ulcer <- 
+melanoma$ulcer <-
   factor(melanoma$ulcer,
          levels=0:1,
          labels=c("Absent", # Reference

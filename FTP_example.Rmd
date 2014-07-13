@@ -1,3 +1,11 @@
+---
+output:
+  html_document:
+    css: custom.css
+    dev: jpeg
+  word_document: default
+---
+
 ```{r Data_prep, echo=FALSE, message=FALSE, warning=FALSE}
 # Moved this outside the document for easy of reading
 # I often have those sections in here
