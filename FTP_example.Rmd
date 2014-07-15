@@ -1,9 +1,10 @@
 ---
+title: "A fast-track-publishing test"
+author: "A brillian scientist"
 output:
-  html_document:
+  Gmisc::rmd_ftp:
     css: custom.css
-    dev: jpeg
-  word_document: default
+    self_contained: false
 ---
 
 ```{r Data_prep, echo=FALSE, message=FALSE, warning=FALSE}
