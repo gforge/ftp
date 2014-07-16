@@ -1,0 +1,9 @@
+---
+output: word_document
+---
+
+```{r, results='asis'}
+mx <- matrix(1:6, ncol=3)
+colnames(mx) <- c("First", "Second", "Third")
+knitr::kable(mx, align=c("l", "c", "r"), format="pandoc", caption="Test table")
+```
