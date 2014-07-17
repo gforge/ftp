@@ -1,3 +1,13 @@
+---
+title: "A fast-track-publishing demo"
+output: 
+  Gmisc::ftp_document:
+    fig_caption: TRUE
+---
+
+End section of methods
+======================
+
 ```{r Data_prep, echo=FALSE, message=FALSE, warning=FALSE}
 # Moved this outside the document for easy of reading
 # I often have those sections in here
@@ -90,9 +100,9 @@ pvalues <-
   1 - pchisq(coef(fit)^2/diag(vcov(fit)), df=1)
 ```
 
-After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and figure `r getNextFigureNo()`.
+After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and figure I.
 
-```{r Regression_forestplot, fig.height=3, fig.width=5, fig.cap="A forest plot comparing the regression coefficients."}
+```{r Regression_forestplot, fig.height=3, fig.width=5, dpi=300, fig.cap="A forest plot comparing the regression coefficients."}
 # I've adjusted the coefficient for age to be by 
 forestplotRegrObj(update(fit, .~.-age+I(age/10)), 
                   order.regexps=c("Female", "age", "ulc", "thi"),
@@ -109,30 +119,4 @@ forestplotRegrObj(update(fit, .~.-age+I(age/10)),
 
   return(capitalize(x))
 })
-```
-
-There was no strong indication for non-linearity for any of the continuous variables although the impact of thickness did seem to lessen above 4 mm, see figure `r getNextFigureNo()`.
-
-```{r spline_plot, fig.cap=plotHR_cap}
-plotHR_cap = paste0("The adjusted and unadjusted restricted cubic spline",
-                    " for tumor thickness. Solid line and confidence interval",
-                    " indicate the adjusted line while the dashed is",
-                    " the unadjusted line. The grey area at ",
-                    " the bottom indicates the density.")
-# Generate adjusted and anuadjusted regression models
-rcs_fit <- update(fit, .~.-thickness+rcs(thickness, 3))
-rcs_fit_ua <- update(fit, .~+rcs(thickness, 3))
-
-# Make sure the axes stay at the exact intended points
-par(xaxs="i", yaxs="i")
-plotHR(list(rcs_fit, rcs_fit_ua), col.dens="#00000033",
-       lty.term=c(1, 2),
-       col.term=c("blue", "#444444"), 
-       col.se = c("#0000FF44", "grey"),
-       polygon_ci=c(TRUE, FALSE),
-       term="thickness", 
-       xlab="Thickness (mm)", 
-       ylim=c(.1, 4), xlim=c(min(melanoma$thickness), 4), 
-       plot.bty="l", y.ticks=c(.1, .25, .5, 1, 2, 4))
-legend(x=.1, y=1.1, legend=c("Adjusted", "Unadjusted"), fill=c("blue", "grey"), bty="n")
 ```
