@@ -1,7 +1,7 @@
 ---
 title: "A fast-track-publishing demo"
 output: 
-  Gmisc::ftp_document:
+  Grmd::docx_document:
     fig_caption: TRUE
 ---
 
@@ -103,6 +103,7 @@ pvalues <-
 After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and figure I.
 
 ```{r Regression_forestplot, fig.height=3, fig.width=5, dpi=300, fig.cap="A forest plot comparing the regression coefficients."}
+# The output size can be fixed by out.width=625, out.height=375 but you loose the caption
 # I've adjusted the coefficient for age to be by 
 forestplotRegrObj(update(fit, .~.-age+I(age/10)), 
                   order.regexps=c("Female", "age", "ulc", "thi"),
