@@ -3,6 +3,7 @@ title: "A fast-track-publishing demo"
 output: 
   Grmd::docx_document:
     fig_caption: TRUE
+    force_captions: TRUE
 ---
 
 End section of methods
@@ -100,9 +101,9 @@ pvalues <-
   1 - pchisq(coef(fit)^2/diag(vcov(fit)), df=1)
 ```
 
-After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and figure I.
+After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and Fig. `r figCapNoNext()`.
 
-```{r Regression_forestplot, fig.height=3, fig.width=5, dpi=300, fig.cap="A forest plot comparing the regression coefficients."}
+```{r Regression_forestplot, fig.height=3, fig.width=5, out.height=300, out.width=500, dpi=300, fig.cap=figCapNo("A forest plot comparing the regression coefficients.")}
 # The output size can be fixed by out.width=625, out.height=375 but you loose the caption
 # I've adjusted the coefficient for age to be by 
 forestplotRegrObj(update(fit, .~.-age+I(age/10)), 
