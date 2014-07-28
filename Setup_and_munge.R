@@ -19,6 +19,9 @@ knitr::opts_knit$set(eval.after='fig.cap')
 # Use the table counter that the htmlTable() provides
 options(table_counter = TRUE)
 
+# Use the figCapNo() with roman letters
+options(fig_caption_no_roman = TRUE)
+
 #################
 # Load_packages #
 #################
