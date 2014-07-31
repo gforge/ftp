@@ -5,8 +5,6 @@
 knitr::opts_chunk$set(warning=FALSE,
                       message=FALSE,
                       echo=FALSE,
-                      dpi=96,
-                      fig.width=4, fig.height=4, # Default figure widths
                       dev="png", dev.args=list(type="cairo"), # The png device
                       # Change to dev="postscript" if you want the EPS-files
                       # for submitting. Also remove the dev.args() as the postscript
@@ -28,8 +26,8 @@ options(fig_caption_no_roman = TRUE)
 library(rms) # I use the cox regression from this package
 library(boot) # The melanoma data set is used in this exampe
 library(Gmisc) # Stuff I find convenient
-library(Greg) # You need to get this from my GitHub see http://gforge.se/Gmisc
-
+library(Greg) # You need to get this from my GitHub see http://gforge.se/packages/
+  
 ##################
 # Munge the data #
 ##################
