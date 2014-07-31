@@ -68,7 +68,7 @@ htmlTable(output_data, align="rrrr",
           n.cgroup = n.cgroup,
           rowlabel="", 
           caption="Baseline characteristics", 
-          tfoot="<sup>&dagger;</sup> Age at the time of surgery. <br/><sup>&Dagger;</sup> Tumour thicknes, also known as Breslow thickness, measured in mm.", 
+          tfoot="<sup>&dagger;</sup> Age at the time of surgery. <br/><sup>&Dagger;</sup> Tumour thickness, also known as Breslow thickness, measured in mm.", 
           ctable=TRUE)
 ```
 
