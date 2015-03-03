@@ -29,6 +29,7 @@ library(rms) # I use the cox regression from this package
 library(boot) # The melanoma data set is used in this exampe
 library(Gmisc) # Stuff I find convenient
 library(Greg) # You need to get this from my GitHub see http://gforge.se/Gmisc
+library(magrittr) # The excellent piping package
 
 ##################
 # Munge the data #

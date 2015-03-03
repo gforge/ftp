@@ -27,7 +27,7 @@ Results
 
 We found `r nrow(melanoma)` patients with malignant melanoma between the years `r paste(range(melanoma$year), collapse=" and ")`. Patients were followed until the end of 1977, the median follow-up time was `r sprintf("%.1f", median(melanoma$time_years))` years (range `r paste(sprintf("%.1f", range(melanoma$time_years)), collapse=" to ")` years). Males were more common than females and had also a higher mortality rate.
 
-```{r Table1, results='asis', cache=FALSE}
+```{r Table1, cache=FALSE}
 table_data <- list()
 getT1Stat <- function(varname, digits=0){
   getDescriptionStatsBy(melanoma[, varname], melanoma$status, 
@@ -45,31 +45,17 @@ table_data[["Age<sup>&dagger;</sup>"]] <- getT1Stat("age")
 table_data[["Ulceration"]] <- getT1Stat("ulcer")
 table_data[["Thickness<sup>&Dagger;</sup>"]] <- getT1Stat("thickness", digits=1)
 
-# Now merge everything into a matrix
-# and create the rgroup & n.rgroup variabels
-rgroup <- c()
-n.rgroup <- c()
-output_data <- NULL
-for (varlabel in names(table_data)){
-  output_data <- rbind(output_data, table_data[[varlabel]])
-  rgroup <- c(rgroup, varlabel)
-  n.rgroup <- c(n.rgroup, nrow(table_data[[varlabel]]))
-}
+mergeDesc(table_data) %>%
+  htmlTable(header = gsub("[ ]*death", "", colnames(table_data[[1]])),
+            # Add a column spanner
+            cgroup = c("", "Death"),
+            n.cgroup = c(2, 2),
+            caption="Baseline characteristics", 
+            tfoot="<sup>&dagger;</sup> Age at the time of surgery.
+            <sup>&Dagger;</sup> Tumour thickness, also known as Breslow thickness, measured in mm.",
+            align="rrrr",
+            css.rgroup = "")
 
-# Add a column spanner for the death columns
-cgroup <- c("", "Death")
-n.cgroup <- c(2, 2)
-colnames(output_data) <- gsub("[ ]*death", "", colnames(output_data))
-
-htmlTable(output_data, align="rrrr",
-          rgroup=rgroup, n.rgroup=n.rgroup, 
-          rgroupCSSseparator="", 
-          cgroup = cgroup,
-          n.cgroup = n.cgroup,
-          rowlabel="", 
-          caption="Baseline characteristics", 
-          tfoot="<sup>&dagger;</sup> Age at the time of surgery. <br/><sup>&Dagger;</sup> Tumour thickness, also known as Breslow thickness, measured in mm.", 
-          ctable=TRUE)
 ```
 
 Main results
@@ -91,7 +77,8 @@ msurv <- Surv(melanoma$time_years, melanoma$status=="Melanoma death")
 fit <- cph(msurv ~ sex + age + ulcer + thickness, data=melanoma)
 
 # Print the model
-printCrudeAndAdjustedModel(fit, desc_digits=0,
+printCrudeAndAdjustedModel(fit, 
+                           desc_digits=0,
                            caption="Adjusted and unadjusted estimates for melanoma specific death.",
                            desc_column=TRUE,
                            add_references=TRUE, 
@@ -101,14 +88,14 @@ pvalues <-
   1 - pchisq(coef(fit)^2/diag(vcov(fit)), df=1)
 ```
 
-After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r pvalueFormatter(pvalues["ulcer=Present"], sig.limit=10^-3)` and `r pvalueFormatter(pvalues["thickness"], sig.limit=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and Fig. `r figCapNoNext()`.
+After adjusting for the three variables, age, sex, tumor thickness and ulceration, only the latter two remained significant (p-value `r txtPval(pvalues["ulcer=Present"], lim.sig=10^-3)` and `r txtPval(pvalues["thickness"], lim.sig=10^-3)`), see table `r as.numeric(options("table_counter"))-1` and Fig. `r figCapNoNext()`.
 
 ```{r Regression_forestplot, fig.height=3, fig.width=5, out.height=300, out.width=500, dpi=300, fig.cap=figCapNo("A forest plot comparing the regression coefficients.")}
 # The output size can be fixed by out.width=625, out.height=375 but you loose the caption
 # I've adjusted the coefficient for age to be by 
 forestplotRegrObj(update(fit, .~.-age+I(age/10)), 
                   order.regexps=c("Female", "age", "ulc", "thi"),
-                  box.default.size=.25, xlog=TRUE,
+                  box.default.size=.25, xlog=TRUE, zero=1,
                   new_page=TRUE, clip=c(.5, 6), rowname.fn=function(x){
   if (grepl("Female", x))
     return("Female")
